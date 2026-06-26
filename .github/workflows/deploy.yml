@@ -31,8 +31,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /var/www/my-cicd-demo
+            cd /var/www/GitCICD
             git pull origin main
             npm install
-            pm2 restart my-cicd-demo || pm2 start index.js --name my-cicd-demo
-            pm2 save
+            pm2 restart GitCICD
