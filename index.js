@@ -3,6 +3,7 @@ const http = require('http');
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write('<h1>Hello from my CI/CD demo to Github Actions!</h1>');
+  res.write('<h1>Hello from my CI/CD demo .</h1>');
   res.end('<h2>Welcome to my CI/CD demo!</h2>');
 });
 
