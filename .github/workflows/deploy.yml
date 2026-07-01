@@ -1,30 +1,35 @@
-name: Deploy to DigitalOcean
+name: CI/CD → DigitalOcean
 
 on:
   push:
-    branches: [main]
+    branches: [main]   # runs every time you push to main
 
 jobs:
-  test:
+
+  # ── JOB 1: Test & Build ────────────────────────────────
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
+      - name: Build the React app
+        run: npm run build
 
+  # ── JOB 2: Deploy (only if build passes) ───────────────
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+    needs: build
     steps:
-      - name: Deploy via SSH
+      - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -34,4 +39,5 @@ jobs:
             cd /var/www/GitCICD
             git pull origin main
             npm install
+            npm run build
             pm2 restart GitCICD
